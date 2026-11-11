@@ -154,7 +154,7 @@ layout_header($cfg['titulo'], ['activo' => in_array($t, ['especialidades', 'cons
         <?php endforeach; ?>
         <td class="acciones">
           <form id="<?= $fid ?>" method="post" class="inline"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$f['id'] ?>">
-            <button class="btn btn-chico" type="submit">Guardar</button>
+            <?= boton_guardar_fila() ?>
             <button class="link link-peligro" type="submit" name="accion" value="eliminar" data-confirm="¿Eliminar <?= e($f['nombre']) ?>?">Eliminar</button>
           </form>
         </td>

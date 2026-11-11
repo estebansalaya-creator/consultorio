@@ -47,12 +47,19 @@ function icono($nombre)
         'especialidades' => '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><path d="M17.25 13.5v7.5M13.5 17.25H21"/>',
         'consultorios'  => '<path d="M5.5 21V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><path d="M12 7v4M10 9h4"/><path d="M15.5 14.5h.01"/>',
         'nomencladores' => '<path d="M4 6h1.5M4 12h1.5M4 18h1.5"/><path d="M9 6h11M9 12h11M9 18h11"/>',
+        'guardar'       => '<path d="M5 3.5h11l3.5 3.5v12.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1z"/><path d="M8 3.5v5h7v-5"/><path d="M7.5 20.5v-6.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v6.5"/>',
         'ayuda'         => '<circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 4"/><path d="M12 17.6h.01"/>',
     ];
     if (!isset($trazos[$nombre])) {
         return '';
     }
     return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $trazos[$nombre] . '</svg>';
+}
+
+/** Botón chico con ícono para guardar una fila de una tabla editable (tooltip "Guardar cambios") */
+function boton_guardar_fila($texto = 'Guardar cambios')
+{
+    return '<button class="btn btn-chico btn-icono" type="submit" data-guardar data-tip="' . e($texto) . '" aria-label="' . e($texto) . '">' . icono('guardar') . '</button>';
 }
 
 /** URL de un archivo de assets con su fecha de modificación, para que el navegador no use una copia vieja al actualizar */

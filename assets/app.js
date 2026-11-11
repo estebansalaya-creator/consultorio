@@ -134,6 +134,18 @@
     if (a && !window.confirm(a.getAttribute('data-confirm'))) ev.preventDefault();
   });
 
+  // Botón de guardar de cada fila: se resalta cuando la fila tiene cambios sin guardar
+  function marcarFila(ev) {
+    var f = ev.target.form;
+    var b = f && f.querySelector('[data-guardar]');
+    if (b && !b.classList.contains('pendiente')) {
+      b.classList.add('pendiente');
+      b.setAttribute('data-tip', 'Guardar cambios (hay cambios sin guardar)');
+    }
+  }
+  document.addEventListener('input', marcarFila);
+  document.addEventListener('change', marcarFila);
+
   // Abrir / cerrar modales: data-abrir="idModal", data-cerrar
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-abrir]');

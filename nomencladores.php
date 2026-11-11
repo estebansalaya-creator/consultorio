@@ -259,7 +259,7 @@ layout_header($nom['nombre'], ['activo' => 'nomencladores.php', 'subtitulo' => '
             <td><input form="<?= $fid ?>" type="text" name="capitulo" value="<?= e($p['capitulo']) ?>" list="lista-capitulos" style="width:120px" aria-label="Capítulo"></td>
             <td><input form="<?= $fid ?>" type="text" inputmode="decimal" name="valor" value="<?= $p['valor'] !== null ? e((float)$p['valor']) : '' ?>" style="width:96px; text-align:right" aria-label="Valor"></td>
             <td><input form="<?= $fid ?>" type="checkbox" name="activo" value="1"<?= $p['activo'] ? ' checked' : '' ?> aria-label="Activo"></td>
-            <td class="acciones"><form id="<?= $fid ?>" method="post" action="<?= e($accionUrl) ?>" class="inline"><?= csrf_field() ?><input type="hidden" name="accion" value="practica"><input type="hidden" name="practica_id" value="<?= (int)$p['id'] ?>"><button class="btn btn-chico" type="submit">Guardar</button></form></td>
+            <td class="acciones"><form id="<?= $fid ?>" method="post" action="<?= e($accionUrl) ?>" class="inline"><?= csrf_field() ?><input type="hidden" name="accion" value="practica"><input type="hidden" name="practica_id" value="<?= (int)$p['id'] ?>"><?= boton_guardar_fila() ?></form></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
