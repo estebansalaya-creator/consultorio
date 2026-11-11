@@ -17,8 +17,19 @@ function correr_sql_archivo(PDO $pdo, $archivo)
     $sql = file_get_contents($archivo);
     $sql = preg_replace('/^\s*--.*$/m', '', $sql);
     foreach (preg_split('/;\s*(\r?\n|$)/', $sql) as $st) {
-        if (trim($st) !== '') {
+        if (trim($st) === '') {
+            continue;
+        }
+        try {
             $pdo->exec($st);
+        } catch (PDOException $ex) {
+            // Si una actualización se cortó a mitad de camino, al reintentarla lo que ya se había hecho
+            // (columna, índice o tabla que ya existen) se saltea y se sigue con lo que falta.
+            // 1060 columna repetida, 1061 índice repetido, 1050 tabla que ya existe
+            $codigo = isset($ex->errorInfo[1]) ? (int)$ex->errorInfo[1] : 0;
+            if (!in_array($codigo, [1060, 1061, 1050], true)) {
+                throw $ex;
+            }
         }
     }
 }
