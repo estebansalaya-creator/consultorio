@@ -258,7 +258,7 @@ layout_header('Ayuda');
         <ol>
           <li>Tocá <b>Copiar CUIL y abrir el padrón</b> (o <b>Copiar DNI…</b>). Se abre la página de la SSS en otra pestaña.</li>
           <li>Pegá con <b>Ctrl+V</b> en el campo CUIL (o Número de documento) y tocá <b>Buscar</b>.</li>
-          <li>Volvé a la pestaña del sistema y marcá lo que figura: <b>Figura con obra social</b> (elegí la obra social de la lista por su código o sigla y el parentesco) o <b>No figura</b>.</li>
+          <li>Con el resultado en pantalla, apretá <b>Ctrl+A</b> y <b>Ctrl+C</b>, volvé a la pestaña del sistema y pegá con <b>Ctrl+V</b> en <b>Resultado de la SSS</b>: se completan solos la obra social (por su código RNAS), el parentesco, la fecha de alta y el CUIL, o se marca <b>No figura</b>. Si no lo reconoce, se completa a mano.</li>
           <li>Tocá <b>Registrar consulta</b>. Con <b>Actualizar la cobertura</b> tildado, si la obra social es otra, la ficha pasa a la nueva y hay que cargar el plan y el nº de afiliado.</li>
         </ol>
         <p>Si el paciente no tiene CUIL cargado, se calcula con el DNI y el sexo: confirmalo con el paciente, porque hay personas con otro CUIL. Cada consulta queda registrada con la fecha y el usuario, y la última se ve en la ficha.</p>

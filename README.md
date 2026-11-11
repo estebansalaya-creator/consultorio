@@ -126,6 +126,15 @@ La tabla `cie10` trae los 14.206 códigos de la CIE-10 en español (categorías 
 
 Búsqueda por droga o principio activo, marca, laboratorio o troquel en el **listado oficial de precios de medicamentos** del Ministerio de Salud (la API que usa argentina.gob.ar/precios-de-medicamentos: `https://cnpm.msal.gov.ar/api/vademecum`). Cada resultado se guarda o actualiza en `medicamentos` y cada búsqueda queda registrada en `medicamento_busquedas` (término, origen online/local, resultados, nuevos, error, usuario y fecha). Una búsqueda repetida dentro de 7 días usa lo guardado; sin internet se busca en lo guardado. Si la dirección cambia, se puede definir `CNPM_API` en `config.local.php`.
 
+## Instalar como app (PC, celular, tablet)
+
+El sistema es una app web instalable (PWA): `manifest.php`, `sw.js`, `offline.html` e íconos en `assets/img/app-*.png`.
+
+- En Chrome/Edge (PC y Android) aparece **Instalar app** en el menú lateral y en la pantalla de ingreso: un clic y queda como programa, con su ícono.
+- En iPhone/iPad el mismo botón explica cómo hacerlo desde Safari (**Compartir → Agregar a inicio**).
+- Necesita **HTTPS** (Railway lo tiene). En la red local por `http://IP:puerto` el navegador no deja instalar; en la misma PC sí funciona con `http://localhost`.
+- El service worker no guarda páginas ni datos de pacientes: sólo estilos, fuentes e íconos. Sin conexión muestra un aviso.
+
 ## Padrón de la SSS
 
 Desde la ficha del paciente, **Padrón SSS** abre la consulta pública del padrón de beneficiarios de la Superintendencia de Servicios de Salud (`https://publico.sssalud.gob.ar/padron`). Esa página tiene reCAPTCHA, así que la app no la consulta sola: copia el CUIL (o el DNI) al portapapeles, abre la página en otra pestaña y recepción registra lo que figura (obra social por código RNAS, parentesco, nota).

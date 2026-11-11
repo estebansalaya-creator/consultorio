@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sin conexión</title>
+<meta name="theme-color" content="#12304a">
+<style>
+  @font-face { font-family: "Hanken"; font-weight: 400; src: url("assets/fonts/hanken-grotesk-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Hanken"; font-weight: 700; src: url("assets/fonts/hanken-grotesk-latin-700-normal.woff2") format("woff2"); }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box;
+         background: #12304a; font-family: "Hanken", "Segoe UI", system-ui, sans-serif; color: #1c2733; }
+  .caja { background: #fff; border-radius: 14px; padding: 30px 28px; max-width: 380px; text-align: center; }
+  img { width: 64px; height: 64px; }
+  h1 { font-size: 24px; margin: 14px 0 8px; }
+  p { color: #5d6977; line-height: 1.5; margin: 0 0 20px; }
+  button { font: inherit; font-weight: 700; font-size: 16px; color: #fff; background: #0d7680; border: 1px solid #0a5f67;
+           border-radius: 8px; padding: 11px 22px; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="caja">
+    <img src="assets/img/icono.svg" alt="">
+    <h1>Sin conexión</h1>
+    <p>No hay internet o no se llega al servidor del centro. Cuando vuelva la conexión, tocá Reintentar.</p>
+    <button type="button" onclick="location.reload()">Reintentar</button>
+  </div>
+</body>
+</html>

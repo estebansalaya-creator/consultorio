@@ -503,6 +503,21 @@ kbd { font-family: inherit; font-size: .88em; background: #fff; border: 1px soli
 .menu .m-txt { flex: 1; min-width: 0; }
 .menu a:hover .mi { background: color-mix(in srgb, var(--ic, #6fd6c9) 26%, transparent); }
 .menu a.on .mi { background: var(--ic, #6fd6c9); color: var(--marino); }
+/* Botón "Instalar app" (PWA): aparece sólo si el navegador permite instalar */
+.menu-instalar {
+  font: inherit; font-size: 16px; font-weight: 500; color: #8fdde3; background: none; border: 0; cursor: pointer; text-align: left;
+  padding: 7px 16px 7px 18px; margin-top: auto; display: flex; align-items: center; gap: 12px; width: 100%;
+}
+.menu-instalar:hover { background: var(--marino-2); color: #fff; }
+.menu-instalar[hidden] { display: none; }
+.login-instalar {
+  font: inherit; font-size: 15px; font-weight: 600; color: var(--acento); background: none; border: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; margin-top: 14px; padding: 6px;
+}
+.login-instalar:hover { text-decoration: underline; }
+.login-instalar[hidden] { display: none; }
+.modal ol, .modal ul { padding-left: 22px; margin: 0 0 6px; }
+.modal li { margin-bottom: 6px; }
 .menu a.on::before { background: var(--ic, #6fd6c9); }
 .menu .cuenta { background: var(--ic, #6fd6c9); }
 

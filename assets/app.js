@@ -146,6 +146,48 @@
   document.addEventListener('input', marcarFila);
   document.addEventListener('change', marcarFila);
 
+  // ---------- App instalable (PWA) ----------
+  var base = (document.querySelector('meta[name=base]') || {}).content || '';
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register(base + 'sw.js', {scope: base}).catch(function () {});
+    });
+  }
+  var instalacion = null;
+  var ua = navigator.userAgent;
+  var esIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function instalada() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  }
+  function mostrarBotones(si) {
+    document.querySelectorAll('.js-instalar').forEach(function (b) { b.hidden = !si; });
+  }
+  window.addEventListener('beforeinstallprompt', function (ev) {
+    ev.preventDefault();
+    instalacion = ev;
+    if (!instalada()) mostrarBotones(true);
+  });
+  window.addEventListener('appinstalled', function () { instalacion = null; mostrarBotones(false); });
+  document.addEventListener('DOMContentLoaded', function () {
+    if (esIOS && !instalada()) mostrarBotones(true);
+  });
+  document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('.js-instalar')) return;
+    if (instalacion) {
+      instalacion.prompt();
+      instalacion.userChoice.then(function (r) {
+        if (r.outcome === 'accepted') mostrarBotones(false);
+      });
+      instalacion = null;
+      return;
+    }
+    var m = document.getElementById('modal-instalar');
+    if (!m) return;
+    m.querySelector('.js-inst-ios').hidden = !esIOS;
+    m.querySelector('.js-inst-otro').hidden = esIOS;
+    m.classList.add('abierto');
+  });
+
   // Abrir / cerrar modales: data-abrir="idModal", data-cerrar
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-abrir]');

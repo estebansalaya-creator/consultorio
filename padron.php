@@ -100,7 +100,8 @@ layout_header('Padrón SSS', ['activo' => 'pacientes.php', 'subtitulo' => nombre
     <div class="card">
       <h2>1. Buscar en el padrón de la SSS</h2>
       <p>La consulta pública de la Superintendencia de Servicios de Salud tiene un control antirrobots, así que se hace en su página:
-        tocá un botón, pegá el dato con <b>Ctrl+V</b> en el campo que corresponde y tocá <b>Buscar</b>.</p>
+        tocá un botón, pegá el dato con <b>Ctrl+V</b> en el campo que corresponde y tocá <b>Buscar</b>.
+        Con el resultado en pantalla, apretá <b>Ctrl+A</b> y <b>Ctrl+C</b> y volvé acá.</p>
       <dl class="datos">
         <dt>CUIL</dt>
         <dd><?php if ($cuilPac): ?><?= e(cuil_txt($cuilPac)) ?><?php if ($esCalculado): ?><br><small class="apagado">Calculado con el DNI y el sexo: confirmalo con el paciente.</small><?php endif; ?>
@@ -119,6 +120,9 @@ layout_header('Padrón SSS', ['activo' => 'pacientes.php', 'subtitulo' => nombre
       <?= csrf_field() ?>
       <h2>2. Registrar lo que figura</h2>
       <?php if ($err): ?><div class="aviso aviso-error"><?= e($err) ?></div><?php endif; ?>
+      <div class="campo"><label for="pegado">Resultado de la SSS</label>
+        <textarea id="pegado" rows="3" placeholder="Pegá acá (Ctrl+V) lo que copiaste de la página de la SSS"></textarea>
+        <small class="js-pegado-msg">Se completa solo lo de abajo. Revisalo y tocá Registrar consulta. También se puede completar a mano.</small></div>
       <div class="form-fila">
         <div class="campo"><label for="cuil">CUIL</label>
           <input type="text" id="cuil" name="cuil" inputmode="numeric" maxlength="13" placeholder="20-12345678-9" value="<?= e($v('cuil', $cuilPac ? cuil_txt($cuilPac) : '')) ?>">
@@ -205,18 +209,80 @@ layout_header('Padrón SSS', ['activo' => 'pacientes.php', 'subtitulo' => nombre
       if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).catch(function () {}); ok = true; }
       window.open(URL_PADRON, 'padron_sss');
       aviso.hidden = false;
-      aviso.textContent = ok ? 'Copiado ' + t + '. En la página de la SSS pegalo (Ctrl+V) en "' + b.getAttribute('data-campo') + '" y tocá Buscar.'
+      aviso.textContent = ok ? 'Copiado ' + t + '. En la página de la SSS pegalo (Ctrl+V) en "' + b.getAttribute('data-campo') + '" y tocá Buscar. Después Ctrl+A, Ctrl+C, y pegalo en "Resultado de la SSS".'
                              : 'No se pudo copiar: escribí ' + t + ' en "' + b.getAttribute('data-campo') + '".';
     });
   });
   var con = document.querySelector('.js-con'), sin = document.querySelector('.js-sin');
+  function verResultado(valor, foco) {
+    con.hidden = valor !== 'con_cobertura';
+    sin.hidden = valor !== 'sin_cobertura';
+    if (foco && !con.hidden) document.getElementById('obra_social_txt').focus();
+  }
   document.querySelectorAll('input[name=resultado]').forEach(function (r) {
-    r.addEventListener('change', function () {
-      con.hidden = r.value !== 'con_cobertura';
-      sin.hidden = r.value !== 'sin_cobertura';
-      if (!con.hidden) document.getElementById('obra_social_txt').focus();
-    });
+    r.addEventListener('change', function () { verResultado(r.value, true); });
   });
+
+  // Resultado pegado desde la página de la SSS: se reconoce la obra social por su código RNAS
+  // (validado contra el listado de agentes del seguro), el parentesco, la fecha de alta y el CUIL.
+  var AGENTES = <?= json_encode(array_column(array_map(function ($a) { return ['k' => $a['rnas'], 'v' => padron_agente_txt($a)]; }, $agentes), 'v', 'k'), JSON_UNESCAPED_UNICODE) ?>;
+  var PARENTESCOS = [[/TITULAR/, 'Titular'], [/C[OÓ]NYUGE|CONVIVIENTE|CONCUBIN/, 'Cónyuge / conviviente'], [/\bHIJ[OA]|\bHIJ[OA]S?\b/, 'Hijo/a'], [/FAMILIAR|PADRE|MADRE|NIET|HERMAN/, 'Otro familiar']];
+  function analizar(t) {
+    // Sólo la afiliación vigente: debajo la SSS muestra "Datos históricos adicionales" con obras sociales anteriores
+    var UP = t.toUpperCase();
+    var i = UP.indexOf('AFILIACI'), j = UP.indexOf('DATOS HIST');
+    if (i < 0) i = 0;
+    var vig = t.slice(i, j > i ? j : t.length), up = vig.toUpperCase(), r = {codigos: []}, m;
+    var re = /(^|[^\d-])(\d{6}|\d-\d{4}-\d)(?![\d-])/g;
+    while ((m = re.exec(vig))) {
+      var c = m[2].replace(/-/g, '');
+      if (AGENTES[c] && r.codigos.indexOf(c) < 0) r.codigos.push(c);
+    }
+    if (!r.codigos.length) {
+      // Código que no está en el listado de agentes del seguro: se toma igual, con la denominación que muestra la SSS
+      m = vig.match(/(?:^|\s)(\d{6})\s+([A-ZÁÉÍÓÚÑ][^\t\n\d]{3,}?)\s+\d{2}\/\d{2}\/\d{4}/);
+      if (m) r.otro = m[1] + ' · ' + m[2].replace(/\s+/g, ' ').trim();
+    }
+    PARENTESCOS.some(function (p) { if (p[0].test(up)) { r.parentesco = p[1]; return true; } return false; });
+    m = vig.match(/\b(20|23|24|27)-?(\d{8})-?(\d)\b/);
+    if (m) r.cuil = m[1] + '-' + m[2] + '-' + m[3];
+    m = vig.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+    if (m) r.alta = m[1] + '/' + m[2] + '/' + m[3];
+    m = up.match(/RELACI[OÓ]N DE DEPENDENCIA|MONOTRIBUT[A-Z]*|JUBILAD[OA]S?|PENSIONAD[OA]S?|DESEMPLE[A-Z]*|SERVICIO DOM[A-Z]*|ADHERENTE|VOLUNTARI[OA]/);
+    if (m) r.tipo = m[0].charAt(0) + m[0].slice(1).toLowerCase();
+    m = vig.match(/(?:^|[^\d-])(20\d{2}-\d{2})(?![\d-])/);
+    if (m) r.periodo = m[1];
+    r.noFigura = /NO SE ENCONTR|NO REGISTRA|NO EXISTE|NO FIGURA|NO POSEE|SIN RESULTADO|NO HAY (DATOS|RESULTADOS|REGISTROS)|NO SE HALL|SIN COBERTURA/.test(UP);
+    return r;
+  }
+  var pegado = document.getElementById('pegado'), msg = document.querySelector('.js-pegado-msg');
+  function aplicar() {
+    var t = pegado.value.trim();
+    if (!t) return;
+    var r = analizar(t), txt;
+    if (r.codigos.length || r.otro) {
+      var os = r.codigos.length ? AGENTES[r.codigos[0]] : r.otro;
+      document.querySelector('input[name=resultado][value=con_cobertura]').checked = true;
+      verResultado('con_cobertura');
+      document.getElementById('obra_social_txt').value = os;
+      if (r.parentesco) document.getElementById('parentesco').value = r.parentesco;
+      var nota = [r.alta ? 'Alta ' + r.alta : '', r.tipo || '', r.periodo ? 'últ. período ' + r.periodo : ''].filter(Boolean).join(' · ');
+      if (nota) document.getElementById('nota').value = nota.slice(0, 255);
+      txt = 'Figura en ' + os.split(' · ').slice(0, 2).join(' · ') + (r.parentesco ? ', ' + r.parentesco.toLowerCase() : '') + (r.tipo ? ' (' + r.tipo.toLowerCase() + ')' : '') + '.';
+      if (r.codigos.length > 1) txt += ' Aparecen también: ' + r.codigos.slice(1).join(', ') + '. Revisá cuál es la vigente.';
+      if (!r.codigos.length) txt += ' Ese código no está en el listado de obras sociales cargado.';
+    } else if (r.noFigura) {
+      document.querySelector('input[name=resultado][value=sin_cobertura]').checked = true;
+      verResultado('sin_cobertura');
+      txt = 'No figura en el padrón.';
+    } else {
+      msg.textContent = 'No reconocí el resultado. ¿Copiaste la página después de tocar Buscar? Si no, completalo a mano.';
+      return;
+    }
+    if (r.cuil) document.getElementById('cuil').value = r.cuil;
+    msg.textContent = txt + ' Revisalo y tocá Registrar consulta.';
+  }
+  pegado.addEventListener('input', aplicar);
 })();
 </script>
 <?php layout_footer(); ?>

@@ -48,12 +48,30 @@ function icono($nombre)
         'consultorios'  => '<path d="M5.5 21V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><path d="M12 7v4M10 9h4"/><path d="M15.5 14.5h.01"/>',
         'nomencladores' => '<path d="M4 6h1.5M4 12h1.5M4 18h1.5"/><path d="M9 6h11M9 12h11M9 18h11"/>',
         'guardar'       => '<path d="M5 3.5h11l3.5 3.5v12.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1z"/><path d="M8 3.5v5h7v-5"/><path d="M7.5 20.5v-6.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v6.5"/>',
+        'instalar'      => '<rect x="6" y="2.5" width="12" height="19" rx="2.2"/><path d="M12 6.5v7.5M9 11l3 3 3-3"/><path d="M10.5 18.3h3"/>',
         'ayuda'         => '<circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 4"/><path d="M12 17.6h.01"/>',
     ];
     if (!isset($trazos[$nombre])) {
         return '';
     }
     return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $trazos[$nombre] . '</svg>';
+}
+
+/** Instrucciones para instalar la app cuando el navegador no ofrece el botón (iPhone/iPad, Firefox…) */
+function modal_instalar()
+{
+    return '<div class="modal-fondo" id="modal-instalar"><div class="modal" role="dialog" aria-labelledby="mi-tit">'
+        . '<h2 id="mi-tit">Instalar como app</h2>'
+        . '<div class="js-inst-ios" hidden><p>En el iPhone o el iPad, desde <b>Safari</b>:</p><ol>'
+        . '<li>Tocá el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba).</li>'
+        . '<li>Elegí <b>Agregar a inicio</b> (puede estar más abajo en la lista).</li>'
+        . '<li>Tocá <b>Agregar</b>. Queda el ícono en la pantalla de inicio y se abre como una app.</li></ol></div>'
+        . '<div class="js-inst-otro" hidden><p>Este navegador no muestra el botón de instalar. Otras formas:</p><ul>'
+        . '<li><b>Chrome o Edge en la PC</b>: el ícono de instalar en la barra de direcciones, o menú <b>⋮</b> → <b>Transmitir, guardar y compartir</b> → <b>Instalar</b>.</li>'
+        . '<li><b>Android</b>: menú <b>⋮</b> → <b>Agregar a la pantalla principal</b> o <b>Instalar app</b>.</li>'
+        . '<li><b>iPhone / iPad</b>: abrí el sistema en Safari, <b>Compartir</b> → <b>Agregar a inicio</b>.</li></ul></div>'
+        . '<div class="fila mt"><button class="btn btn-pri" type="button" data-cerrar>Entendido</button></div>'
+        . '</div></div>';
 }
 
 /** Botón chico con ícono para guardar una fila de una tabla editable (tooltip "Guardar cambios") */
@@ -129,6 +147,12 @@ function layout_header($titulo, array $op = [])
 <title><?= e($titulo) ?> | <?= e($centro) ?></title>
 <link rel="stylesheet" href="<?= asset_url('assets/app.css') ?>">
 <link rel="icon" href="<?= asset_url('assets/img/icono.svg') ?>" type="image/svg+xml">
+<link rel="manifest" href="<?= url('manifest.php') ?>">
+<meta name="theme-color" content="#12304a">
+<link rel="apple-touch-icon" href="<?= url('assets/img/apple-touch-icon.png') ?>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="<?= e($centro) ?>">
 <meta name="csrf" content="<?= e(csrf_token()) ?>">
 <meta name="base" content="<?= e(url()) ?>">
 <script src="<?= asset_url('assets/app.js') ?>"></script>
@@ -152,6 +176,7 @@ function layout_header($titulo, array $op = [])
               if ($n > 0) echo ' <span class="cuenta" title="Pacientes en la sala de espera">' . $n . '</span>';
           } ?></a>
       <?php endforeach; ?>
+      <button type="button" class="menu-instalar js-instalar" hidden style="--ic: #8fdde3"><span class="mi"><?= icono('instalar') ?></span><span class="m-txt">Instalar app</span></button>
     </nav>
     <div class="usuario">
       <span><?= e($u['nombre']) ?><small><?= e(ROLES[$u['rol']]) ?></small></span>
@@ -208,5 +233,6 @@ function layout_footer(array $scripts = [])
     foreach ($scripts as $s) {
         echo '<script src="' . asset_url($s) . '"></script>' . "\n";
     }
+    echo modal_instalar();
     echo "</body>\n</html>";
 }

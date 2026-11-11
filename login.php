@@ -41,5 +41,6 @@ layout_header('Ingresar', ['clase' => 'pagina-login' . ($logo ? ' con-logo' : ''
     <input type="password" id="password" name="password" autocomplete="current-password" required>
   </div>
   <button class="btn btn-pri btn-grande btn-bloque" type="submit">Ingresar</button>
+  <button type="button" class="login-instalar js-instalar" hidden><?= icono('instalar') ?> Instalar como app en este equipo</button>
 </form>
 <?php layout_footer(); ?>
