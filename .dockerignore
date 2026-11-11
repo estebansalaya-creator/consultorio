@@ -1,0 +1,8 @@
+.git
+.gitignore
+.gitattributes
+config.local.php
+web.config
+*.log
+README.md
+iis/

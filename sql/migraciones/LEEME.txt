@@ -1,0 +1,7 @@
+Actualizaciones de la base de datos.
+
+Cada archivo NNN_descripcion.sql (ej. 002_liquidacion_os.sql) lleva la base a la version NNN.
+La app las aplica sola al abrir cualquier pagina, en orden y una sola vez (ver inc/migraciones.php).
+Al agregar una, subir DB_VERSION_APP en inc/migraciones.php al mismo numero.
+
+La version 1 es sql/database.sql.

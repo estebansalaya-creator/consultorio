@@ -1,0 +1,10 @@
+# Configuración con contraseñas: nunca subir
+config.local.php
+
+# Sistema / editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,7 @@
+# Fin de línea: LF en el repositorio (Railway/Docker), CRLF para los scripts de Windows
+* text=auto
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.woff2 binary
+*.png binary
+*.jpg binary
