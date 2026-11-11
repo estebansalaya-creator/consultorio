@@ -25,6 +25,7 @@ require_once __DIR__ . '/agenda.php';
 require_once __DIR__ . '/historia.php';
 require_once __DIR__ . '/nomencladores.php';
 require_once __DIR__ . '/medicamentos.php';
+require_once __DIR__ . '/padron.php';
 require_once __DIR__ . '/recetas.php';
 require_once __DIR__ . '/ordenes.php';
 require_once __DIR__ . '/caja.php';

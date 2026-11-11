@@ -144,7 +144,7 @@ if (!$nom):
     $defecto = (int)config_get('nomenclador_defecto', '0');
     $labNom = (int)config_get('orden_lab_nomenclador', '0');
     $prestActivas = (int)q_val('SELECT COUNT(*) FROM prestaciones WHERE activo = 1');
-    layout_header('Nomencladores', ['activo' => 'prestaciones.php']);
+    layout_header('Nomencladores', ['activo' => 'nomencladores.php']);
     ?>
 <p class="apagado">Las listas de prácticas con su código (PMO, Bioquímicas, PAMI, OBSBA, NBU o una propia). Cada prestación lleva su código en cada nomenclador y cada obra social dice con cuál se le factura; las órdenes de laboratorio y estudios se arman con estos códigos. <a href="<?= url('prestaciones.php') ?>">Volver a prestaciones</a></p>
 <div class="grid-2-1">
@@ -229,7 +229,7 @@ $vigencias = q_all('SELECT * FROM prest_nomenclador_vigencia WHERE id_nomenclado
 $vigActual = vigencia_actual($id);
 $obras = q_all('SELECT nombre FROM obras_sociales WHERE nomenclador_id = ? AND activo = 1 ORDER BY orden', [$id]);
 $accionUrl = url('nomencladores.php?id=' . $id . ($q !== '' ? '&q=' . urlencode($q) : ''));
-layout_header($nom['nombre'], ['activo' => 'prestaciones.php', 'subtitulo' => 'Nomenclador · ' . number_format($total, 0, ',', '.') . ' códigos']);
+layout_header($nom['nombre'], ['activo' => 'nomencladores.php', 'subtitulo' => 'Nomenclador · ' . number_format($total, 0, ',', '.') . ' códigos']);
 ?>
 <p class="apagado"><a href="<?= url('nomencladores.php') ?>">Todos los nomencladores</a><?= $obras ? ' · Lo usan: ' . e(implode(', ', array_column($obras, 'nombre'))) : '' ?><?= (int)config_get('nomenclador_defecto', '0') === $id ? ' · Es el nomenclador por defecto' : '' ?><?= (int)config_get('orden_lab_nomenclador', '0') === $id ? ' · Es el de las órdenes de laboratorio' : '' ?></p>
 <div class="grid-2-1">

@@ -9,7 +9,7 @@
  */
 
 /** Versión de base que necesita este código: el número de la última migración */
-const DB_VERSION_APP = 5;
+const DB_VERSION_APP = 6;
 
 /** Ejecuta un archivo .sql sentencia por sentencia (separadas por ; al final de línea) */
 function correr_sql_archivo(PDO $pdo, $archivo)

@@ -121,7 +121,8 @@ function campo_rnas($form, $valor)
     return '<input form="' . e($form) . '" type="text" name="rnas" class="js-rnas" list="lista-rnas" value="' . e($valor) . '" inputmode="numeric" maxlength="7" style="width:110px" placeholder="Buscar" aria-label="Código RNAS">'
         . '<small class="js-rnas-txt rnas-txt"></small>';
 }
-layout_header($cfg['titulo'], ['activo' => $cfg['volver']]);
+// Especialidades y consultorios están en el menú principal: se marcan ahí
+layout_header($cfg['titulo'], ['activo' => in_array($t, ['especialidades', 'consultorios'], true) ? 'abm.php?t=' . $t : $cfg['volver']]);
 ?>
 <p class="apagado"><?= e($cfg['ayuda']) ?> <a href="<?= url($cfg['volver']) ?>">Volver</a></p>
 <div class="card" style="max-width:<?= $cfg['rnas'] ? 1080 : 860 ?>px">

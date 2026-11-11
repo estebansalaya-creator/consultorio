@@ -231,6 +231,7 @@ label.check { font-weight: 500; display: inline-flex; align-items: center; curso
 .login p { color: var(--gris); margin-bottom: 20px; }
 .pagina-login .solo {
   background:
+    url("img/fondo-login.svg") center / cover no-repeat,
     radial-gradient(120% 90% at 85% 10%, #1d4d72 0%, transparent 60%),
     radial-gradient(90% 80% at 0% 100%, #0f3a4a 0%, transparent 55%),
     var(--marino);

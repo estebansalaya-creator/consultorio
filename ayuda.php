@@ -37,6 +37,7 @@ layout_header('Ayuda');
         <a href="#recordatorios">Recordatorios por WhatsApp</a>
         <a href="#aviso-profesional">Avisar al profesional</a>
         <a href="#pacientes">Pacientes</a>
+        <a href="#padron">Padrón de la SSS</a>
         <a href="#coberturas">Obras sociales y coseguros</a>
         <a href="#cobrar">Cobrar</a>
         <a href="#cobro-sin-turno">Cobro sin turno</a>
@@ -249,6 +250,19 @@ layout_header('Ayuda');
         </ul>
         <p>Recepción no ve la historia clínica (antecedentes, evoluciones, diagnósticos): es confidencial y la ven sólo los profesionales. Por eso las alergias o enfermedades que cuente el paciente no se anotan en las notas: se las dice al profesional.</p>
         <p class="apagado">Al eliminar un paciente que tiene turnos, cobros o historia clínica, no se borra: queda archivado y deja de aparecer en las búsquedas. No deja cargar dos pacientes con el mismo DNI.</p>
+      </article>
+
+      <article class="tema card" id="padron">
+        <h3>Padrón de la SSS</h3>
+        <p>Para saber qué obra social nacional tiene un paciente, en su ficha tocá <b>Padrón SSS</b>. Se usa la consulta pública de la Superintendencia de Servicios de Salud, que tiene un control antirrobots: por eso la búsqueda se hace en su página y el resultado se anota acá.</p>
+        <ol>
+          <li>Tocá <b>Copiar CUIL y abrir el padrón</b> (o <b>Copiar DNI…</b>). Se abre la página de la SSS en otra pestaña.</li>
+          <li>Pegá con <b>Ctrl+V</b> en el campo CUIL (o Número de documento) y tocá <b>Buscar</b>.</li>
+          <li>Volvé a la pestaña del sistema y marcá lo que figura: <b>Figura con obra social</b> (elegí la obra social de la lista por su código o sigla y el parentesco) o <b>No figura</b>.</li>
+          <li>Tocá <b>Registrar consulta</b>. Con <b>Actualizar la cobertura</b> tildado, si la obra social es otra, la ficha pasa a la nueva y hay que cargar el plan y el nº de afiliado.</li>
+        </ol>
+        <p>Si el paciente no tiene CUIL cargado, se calcula con el DNI y el sexo: confirmalo con el paciente, porque hay personas con otro CUIL. Cada consulta queda registrada con la fecha y el usuario, y la última se ve en la ficha.</p>
+        <p class="apagado">Para que la cobertura se actualice sola, cada obra social del centro tiene que tener su <b>código RNAS</b> en Ajustes → Obras sociales. Las prepagas y las obras sociales provinciales (IOMA, IPS, etc.) no están en este padrón.</p>
       </article>
 
       <article class="tema card" id="coberturas">

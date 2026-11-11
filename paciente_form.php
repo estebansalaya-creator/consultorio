@@ -9,7 +9,7 @@ if ($id && !$c) {
 }
 $err = '';
 // Los antecedentes no están acá: son parte de la historia clínica y los cargan los profesionales
-$CAMPOS = ['nombre', 'apellido', 'dni', 'fecha_nac', 'sexo', 'telefono', 'email', 'direccion', 'obra_social_id', 'plan', 'nro_afiliado', 'notas'];
+$CAMPOS = ['nombre', 'apellido', 'dni', 'cuil', 'fecha_nac', 'sexo', 'telefono', 'email', 'direccion', 'obra_social_id', 'plan', 'nro_afiliado', 'notas'];
 
 if (es_post()) {
     csrf_check();
@@ -29,6 +29,7 @@ if (es_post()) {
         $d[$k] = trim((string)post($k, ''));
     }
     $d['dni'] = preg_replace('/\D/', '', $d['dni']);
+    $d['cuil'] = cuil_limpio($d['cuil']);
     $d['fecha_nac'] = fecha_valida($d['fecha_nac']);
     $d['sexo'] = isset(SEXOS[$d['sexo']]) ? $d['sexo'] : '';
     $d['obra_social_id'] = (int)$d['obra_social_id'] ?: '';
@@ -37,6 +38,8 @@ if (es_post()) {
     }
     if ($d['nombre'] === '') {
         $err = 'Poné el nombre.';
+    } elseif ($d['cuil'] !== '' && !cuil_valido($d['cuil'])) {
+        $err = 'El CUIL no es válido: revisá los 11 números (o dejalo vacío).';
     } elseif ($d['email'] !== '' && !filter_var($d['email'], FILTER_VALIDATE_EMAIL)) {
         $err = 'El email no parece válido.';
     } elseif ($d['fecha_nac'] && $d['fecha_nac'] > date('Y-m-d')) {
@@ -71,6 +74,8 @@ layout_header($c ? 'Editar paciente' : 'Nuevo paciente', ['activo' => 'pacientes
     <div class="campo"><label for="nombre">Nombre</label><input type="text" id="nombre" name="nombre" value="<?= e($v('nombre')) ?>" required maxlength="80" autofocus></div>
     <div class="campo"><label for="apellido">Apellido</label><input type="text" id="apellido" name="apellido" value="<?= e($v('apellido')) ?>" maxlength="80"></div>
     <div class="campo"><label for="dni">DNI</label><input type="text" inputmode="numeric" id="dni" name="dni" value="<?= e($v('dni')) ?>" maxlength="15"></div>
+    <div class="campo"><label for="cuil">CUIL</label><input type="text" inputmode="numeric" id="cuil" name="cuil" value="<?= e($v('cuil') !== '' && !es_post() ? cuil_txt($v('cuil')) : $v('cuil')) ?>" maxlength="13" placeholder="Opcional">
+      <small>Si queda vacío, para el padrón de la SSS se calcula con el DNI y el sexo.</small></div>
   </div>
   <div class="form-fila">
     <div class="campo"><label for="fecha_nac">Fecha de nacimiento</label><input type="date" id="fecha_nac" name="fecha_nac" value="<?= e($v('fecha_nac')) ?>" max="<?= date('Y-m-d') ?>"></div>

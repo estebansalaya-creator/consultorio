@@ -39,6 +39,7 @@ $sinCobrar = $verPlata ? turnos_sin_cobrar($id) : [];
 $evoluciones = $verHc ? evoluciones_de($id, 5) : [];
 $conEvolucion = $verHc ? array_map('intval', array_column(q_all('SELECT turno_id FROM evoluciones WHERE paciente_id = ? AND turno_id IS NOT NULL', [$id]), 'turno_id')) : [];
 $wa = whatsapp_link($c['telefono']);
+$padron = q_row('SELECT pc.*, os.nombre AS obra_social FROM padron_consultas pc LEFT JOIN obras_sociales os ON os.id = pc.obra_social_id WHERE pc.paciente_id = ? ORDER BY pc.fecha DESC, pc.id DESC LIMIT 1', [$id]);
 
 $sub = trim(($c['dni'] ? 'DNI ' . dni_txt($c['dni']) : '') . ($c['fecha_nac'] ? ' · ' . edad_txt($c['fecha_nac']) : '') . ' · ' . cobertura_txt($c['obra_social']), ' ·');
 layout_header(nombre_paciente($c), ['activo' => 'pacientes.php', 'subtitulo' => $sub]);
@@ -160,17 +161,20 @@ layout_header(nombre_paciente($c), ['activo' => 'pacientes.php', 'subtitulo' => 
         <?php if ($c['telefono']): ?><dt>Teléfono</dt><dd><?= e($c['telefono']) ?><?php if ($wa): ?> · <a href="<?= e($wa) ?>" target="_blank" rel="noopener">WhatsApp</a><?php endif; ?></dd><?php endif; ?>
         <?php if ($c['email']): ?><dt>Email</dt><dd><a href="mailto:<?= e($c['email']) ?>"><?= e($c['email']) ?></a></dd><?php endif; ?>
         <?php if ($c['dni']): ?><dt>DNI</dt><dd><?= e(dni_txt($c['dni'])) ?></dd><?php endif; ?>
+        <?php if ($c['cuil']): ?><dt>CUIL</dt><dd><?= e(cuil_txt($c['cuil'])) ?></dd><?php endif; ?>
         <?php if ($c['fecha_nac']): ?><dt>Nacimiento</dt><dd><?= e(fecha($c['fecha_nac'])) ?> (<?= e(edad_txt($c['fecha_nac'])) ?>)</dd><?php endif; ?>
         <?php if ($c['sexo']): ?><dt>Sexo</dt><dd><?= e(SEXOS[$c['sexo']]) ?></dd><?php endif; ?>
         <?php if ($c['direccion']): ?><dt>Dirección</dt><dd><?= e($c['direccion']) ?></dd><?php endif; ?>
         <dt>Cobertura</dt><dd><span class="cob<?= $c['obra_social'] ? '' : ' cob-part' ?>"><?= e(cobertura_txt($c['obra_social'])) ?></span>
           <?php if ($c['obra_social']): ?><br><small><?= $c['rnas'] ? 'RNAS ' . e($c['rnas']) . ' · ' : '' ?><?= $c['plan'] ? 'Plan ' . e($c['plan']) . ' · ' : '' ?><?= $c['nro_afiliado'] ? 'Afiliado ' . e($c['nro_afiliado']) : 'Falta el nº de afiliado' ?></small><?php endif; ?></dd>
+        <?php if ($padron): ?><dt>Padrón SSS</dt><dd><?= e(padron_resultado_txt($padron)) ?><br><small class="apagado">Consultado el <?= e(fecha($padron['fecha'])) ?></small></dd><?php endif; ?>
         <?php if ($c['notas']): ?><dt>Notas</dt><dd style="white-space:pre-line"><?= e($c['notas']) ?></dd><?php endif; ?>
         <dt>Alta</dt><dd class="apagado"><?= e(fecha($c['creado'])) ?></dd>
       </dl>
       <div class="fila mt">
         <?php if (puede('turnos')): ?><a class="btn btn-pri" href="<?= url('turno.php?paciente=' . $id) ?>">Dar turno</a><?php endif; ?>
         <?php if (puede('pacientes_editar')): ?><a class="btn" href="<?= url('paciente_form.php?id=' . $id) ?>">Editar datos</a><?php endif; ?>
+        <?php if (puede('pacientes_editar')): ?><a class="btn" href="<?= url('padron.php?paciente=' . $id) ?>">Padrón SSS</a><?php endif; ?>
       </div>
     </div>
 

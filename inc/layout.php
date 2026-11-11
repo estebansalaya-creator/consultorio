@@ -16,6 +16,9 @@ function menu_items()
         ['caja.php',          'Caja',                                     'caja',          'caja',          '#f2c25c'],
         ['prestaciones.php',  'Prestaciones',                             'prestaciones',  'prestaciones',  '#f5a3b5'],
         ['profesionales.php', 'Profesionales',                            'profesionales', 'profesionales', '#c3a6f5'],
+        ['abm.php?t=especialidades', 'Especialidades',                    'ajustes',       'especialidades', '#7fd1f0'],
+        ['abm.php?t=consultorios',   'Consultorios',                      'ajustes',       'consultorios',  '#9ad7b5'],
+        ['nomencladores.php', 'Nomencladores',                            'prestaciones',  'nomencladores', '#f0b7e0'],
         ['ajustes.php',       'Ajustes',                                  'ajustes',       'ajustes',       '#b3bccb'],
         ['ayuda.php',         'Ayuda',                                    'ayuda',         'ayuda',         '#9fdc9a'],
     ];
@@ -41,6 +44,9 @@ function icono($nombre)
         'recetas'       => '<path d="M6 2.5h9l4 4V21a.5.5 0 0 1-.5.5h-12A.5.5 0 0 1 6 21z"/><path d="M15 2.5v4h4"/><path d="M9 10v7M9 10h2.5a2 2 0 0 1 0 4H9M11 14l3.5 3.5M14.5 14 11 17.5"/>',
         'ordenes'       => '<path d="M8 3.5h8M9 2.5h6v2.5H9z"/><path d="M7.5 4H6a1 1 0 0 0-1 1v15.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1.5"/><path d="M10 9v4.2L8 17.5h8L14 13.2V9M9.6 9h4.8"/>',
         'vademecum'     => '<rect x="2.8" y="8.2" width="18.4" height="7.6" rx="3.8" transform="rotate(-40 12 12)"/><path d="m9.2 8.7 6.1 6.6"/>',
+        'especialidades' => '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><path d="M17.25 13.5v7.5M13.5 17.25H21"/>',
+        'consultorios'  => '<path d="M5.5 21V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><path d="M12 7v4M10 9h4"/><path d="M15.5 14.5h.01"/>',
+        'nomencladores' => '<path d="M4 6h1.5M4 12h1.5M4 18h1.5"/><path d="M9 6h11M9 12h11M9 18h11"/>',
         'ayuda'         => '<circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 4"/><path d="M12 17.6h.01"/>',
     ];
     if (!isset($trazos[$nombre])) {
@@ -71,6 +77,7 @@ function ayuda_link()
         'pacientes.php'         => $prof ? 'historia' : 'pacientes',
         'paciente.php'          => $prof ? 'historia' : 'pacientes',
         'paciente_form.php'     => 'pacientes',
+        'padron.php'            => 'padron',
         'historia.php'          => 'historia',
         'evolucion.php'         => 'evolucion',
         'cobro.php'             => 'cobrar',

@@ -126,6 +126,14 @@ La tabla `cie10` trae los 14.206 códigos de la CIE-10 en español (categorías 
 
 Búsqueda por droga o principio activo, marca, laboratorio o troquel en el **listado oficial de precios de medicamentos** del Ministerio de Salud (la API que usa argentina.gob.ar/precios-de-medicamentos: `https://cnpm.msal.gov.ar/api/vademecum`). Cada resultado se guarda o actualiza en `medicamentos` y cada búsqueda queda registrada en `medicamento_busquedas` (término, origen online/local, resultados, nuevos, error, usuario y fecha). Una búsqueda repetida dentro de 7 días usa lo guardado; sin internet se busca en lo guardado. Si la dirección cambia, se puede definir `CNPM_API` en `config.local.php`.
 
+## Padrón de la SSS
+
+Desde la ficha del paciente, **Padrón SSS** abre la consulta pública del padrón de beneficiarios de la Superintendencia de Servicios de Salud (`https://publico.sssalud.gob.ar/padron`). Esa página tiene reCAPTCHA, así que la app no la consulta sola: copia el CUIL (o el DNI) al portapapeles, abre la página en otra pestaña y recepción registra lo que figura (obra social por código RNAS, parentesco, nota).
+
+- El CUIL se guarda en `pacientes.cuil`; si falta, se calcula con DNI y sexo (20/27, o 23 cuando el dígito da 10) y se muestra para confirmar.
+- Cada consulta queda en `padron_consultas` (fecha, usuario, resultado, RNAS, obra social como figura). La última se ve en la ficha.
+- Con **Actualizar la cobertura**, si el RNAS corresponde a otra obra social del centro, la ficha pasa a esa (y se borran plan y nº de afiliado). Para eso cada obra social necesita su código RNAS en Ajustes → Obras sociales.
+
 ## Nomencladores de prácticas
 
 Misma estructura que **gestion_adm**: `prest_nomenclador`, `prest_nomenclador_capitulo`, `prest_nomenclador_codigo` (código como texto; único por nomenclador), `prest_nomenclador_vigencia` y `prest_nomenclador_valor` (los valores van por vigencia: cada edición tiene fecha de inicio y la anterior termina el día antes). Trae cargados PMO, Bioquímicas, PAMI, OBSBA y NBU (9.750 códigos de `sql/prest_nomenclador_datos_20260917.sql`, con los ids de origen 1, 2, 5, 6 y 7 y la Ñ y los acentos recuperados). Se importan más códigos y valores desde CSV (`código;descripción;valor;capítulo`). Cada obra social dice con qué nomenclador se le factura (o usa el por defecto, el PMO) y cada prestación tiene su código en cada nomenclador (`prestacion_codigo`). Al dar un turno queda guardado el código que corresponde a la cobertura.
